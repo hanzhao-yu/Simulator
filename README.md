@@ -15,10 +15,10 @@
 # What's next for DeFake
 
 # Built With
-  Java
-  Apache Tomcat server
-  Json
-  Mysql
-  Coinbase API
-  MAMP
+  Java, 
+  Apache Tomcat server, 
+  Json, 
+  Mysql, 
+  Coinbase API, 
+  MAMP, 
 # Try it out
