@@ -7,7 +7,7 @@
 # How I built it
 
 # Challenges I ran into
-
+  Database design.
 # Accomplishments that I'm proud of
 
 # What I learned
