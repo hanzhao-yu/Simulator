@@ -6,7 +6,8 @@ public class DBConnectionFactory {
 	// Create a DBConnection based on given db type.
 	public static DBConnection getDBConnection(String db) {
 		switch (db) {
-		
+		case "mysql":
+			return MySQLConnection.getInstance();
 		default:
 			throw new IllegalArgumentException("Invalid db " + db);
 		}
@@ -17,4 +18,3 @@ public class DBConnectionFactory {
 		return getDBConnection(DEFAULT_DB);
 	}
 }
-

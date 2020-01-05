@@ -1,6 +1,7 @@
 package db;
 
 import java.util.List;
+import java.util.Set;
 
 import entity.Transaction;
 
@@ -24,7 +25,15 @@ public interface DBConnection {
 	 * @param userId
 	 * @return list of transactions
 	 */
-	public List<Transaction> searchTransactions(String userId);
+	public Set<Transaction> searchTransactions(String userId);
+	
+	/**
+	 * Search transactions ids by userId.
+	 * 
+	 * @param userId
+	 * @return list of String
+	 */
+	public Set<String> getTransactionsIds(String userId);
 
 	/**
 	 * create transaction into db.
@@ -32,4 +41,13 @@ public interface DBConnection {
 	 * @param item
 	 */
 	public void createTransaction(Transaction item);
+	
+	/**
+	 * update user account.
+	 * 
+	 * @param userId
+	 * @param usd
+	 * @param btc
+	 */
+	public void updateUser(String userId, Integer usd, Integer btc);
 }

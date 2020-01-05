@@ -2,7 +2,12 @@ package db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import entity.Transaction;
 
@@ -43,20 +48,102 @@ public class MySQLConnection implements DBConnection {
 
 	@Override
 	public void deleteTransaction(String userId, List<String> itemIds) {
-		// TODO Auto-generated method stub
-		
+		String query = "DELETE FROM transactions WHERE user_id = ? and item_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(query);
+			for (String itemId : itemIds) {
+				statement.setString(1, userId);
+				statement.setString(2, itemId);
+				statement.execute();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
-	public List<Transaction> searchTransactions(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Transaction> searchTransactions(String userId) {
+		Set<String> itemIds = getTransactionsIds(userId);
+		Set<Transaction> resultTransactions = new HashSet<>();
+		try {
+
+			for (String itemId : itemIds) {
+				String sql = "SELECT * from transactions WHERE item_id = ? AND user_id = ?";
+				PreparedStatement statement = conn.prepareStatement(sql);
+				statement.setString(1, itemId);
+				statement.setString(2, userId);
+				ResultSet rs = statement.executeQuery();
+				Transaction.Builder builder = new Transaction.Builder();
+
+				if (rs.next()) {
+					builder.setItemId(rs.getString("item_id"));
+					builder.setUserId(rs.getString("user_id"));
+					builder.setAmount(rs.getInt("amount"));
+					builder.setTargetPrice(rs.getInt("target_price"));
+					builder.setBuySell(rs.getString("buy_sell"));
+				}
+
+				resultTransactions.add(builder.build());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resultTransactions;
 	}
 
 	@Override
 	public void createTransaction(Transaction item) {
-		// TODO Auto-generated method stub
-		
+		try {
+			// insert into transactions table
+			String sql = "INSERT INTO transactions VALUES (?,?,?,?,?)";
+
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, item.getItemId());
+			statement.setString(2, item.getUserId());
+			statement.setInt(3, item.getTargetPrice());
+			statement.setInt(4, item.getAmount());
+			statement.setString(5, item.getBuySell());
+			statement.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void updateUser(String userId, Integer usd, Integer btc) {
+		String query = "UPDATE users SET usd_asset = ?, btc_asset = ? WHERE user_id = ?";
+		try {
+			PreparedStatement statement = conn.prepareStatement(query);
+
+			statement.setInt(1, usd);
+			statement.setInt(2, btc);
+			statement.setString(3, userId);
+			statement.execute();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public Set<String> getTransactionsIds(String userId) {
+		Set<String> transactions = new HashSet<>();
+		try {
+			String sql = "SELECT item_id from transactions WHERE user_id = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, userId);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				String itemId = rs.getString("item_id");
+				transactions.add(itemId);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return transactions;
+
 	}
 }
-

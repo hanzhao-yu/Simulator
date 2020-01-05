@@ -60,22 +60,22 @@ public class Transaction {
 			return this;
 		}
 
-		public Builder setName(String userId) {
+		public Builder setUserId(String userId) {
 			this.userId = userId;
 			return this;
 		}
 
-		public Builder setRating(int targetPrice) {
+		public Builder setTargetPrice(int targetPrice) {
 			this.targetPrice = targetPrice;
 			return this;
 		}
 
-		public Builder setAddress(int amount) {
+		public Builder setAmount(int amount) {
 			this.amount = amount;
 			return this;
 		}
 
-		public Builder setCity(String buySell) {
+		public Builder setBuySell(String buySell) {
 			this.buySell = buySell;
 			return this;
 		}
