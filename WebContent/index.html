@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="description" content="BitCoin Broker">
+<meta name="author" content="Hanzhao Yu">
+<title>BitCoin Broker</title>
+<link
+	href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700'
+	rel='stylesheet' type='text/css'>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+
+	<div class="container">
+		<header>
+			<p>
+				<span>BitCoin</span> <br /> Broker
+			</p>
+		</header>
+
+		<section class="main-section">
+
+			<aside id="item-nav">
+				<div class="space"></div>
+				<nav class="main-nav">
+					<a href="#" id="main-btn" class="main-nav-btn active"> Main </a> <a
+						href="#" id="transactions-btn" class="main-nav-btn">
+						Transactions </a> <a href="#" id="trade-btn" class="main-nav-btn">
+						Trade </a>
+				</nav>
+			</aside>
+
+			<ul id="item-list">
+				<li class="item">
+
+					<div>
+						<p class="item-id">{item_id}</p>
+						<p class="item-amount">Amount</p>
+						<p class="item-target">Target Price</p>
+						<p class="item-bs">Buy/Sell</p>
+
+					</div>
+
+					<div class="cancel-link">cancel</div>
+				</li>
+			</ul>
+
+			<ul id="account-summary">
+				<li class="info">
+					<div>
+						<p class="user-id">{user_id}</p>
+						<p class="user-total">Total Asset</p>
+						<p class="user-usd">USD Asset</p>
+						<p class="user-btc">BTC Asset</p>
+
+					</div>
+				</li>
+			</ul>
+		</section>
+	</div>
+
+
+	<script src="scripts/main.js"></script>
+</body>
+</html>
