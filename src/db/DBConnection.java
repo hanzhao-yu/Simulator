@@ -1,6 +1,5 @@
 package db;
 
-import java.util.List;
 import java.util.Set;
 
 import entity.Transaction;
@@ -15,9 +14,9 @@ public interface DBConnection {
 	 * Delete the transactions for a user.
 	 * 
 	 * @param userId
-	 * @param itemIds
+	 * @param itemId
 	 */
-	public void deleteTransaction(String userId, List<String> itemIds);
+	public void deleteTransaction(String userId, String itemId);
 
 	/**
 	 * Search transactions by userId.
@@ -50,4 +49,12 @@ public interface DBConnection {
 	 * @param btc
 	 */
 	public void updateUser(String userId, Integer usd, Integer btc);
+	
+	/**
+	 * update transactions.
+	 * 
+	 * @param buyPrice
+	 * @param sellPrice
+	 */
+	public void updateTransactions(Integer buyPrice, Integer sellPrice);
 }

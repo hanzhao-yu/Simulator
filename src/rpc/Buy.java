@@ -1,8 +1,6 @@
 package rpc;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.io.*;
 
 import javax.servlet.ServletException;
@@ -11,7 +9,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,13 +23,14 @@ import entity.Transaction;
 public class Buy extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private DBConnection conn = DBConnectionFactory.getDBConnection();
+	
+
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Buy() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**

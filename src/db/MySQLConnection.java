@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import entity.Transaction;
@@ -47,15 +46,13 @@ public class MySQLConnection implements DBConnection {
 	}
 
 	@Override
-	public void deleteTransaction(String userId, List<String> itemIds) {
+	public void deleteTransaction(String userId, String itemId) {
 		String query = "DELETE FROM transactions WHERE user_id = ? and item_id = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(query);
-			for (String itemId : itemIds) {
-				statement.setString(1, userId);
-				statement.setString(2, itemId);
-				statement.execute();
-			}
+			statement.setString(1, userId);
+			statement.setString(2, itemId);
+			statement.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -113,7 +110,7 @@ public class MySQLConnection implements DBConnection {
 
 	@Override
 	public void updateUser(String userId, Integer usd, Integer btc) {
-		String query = "UPDATE users SET usd_asset = ?, btc_asset = ? WHERE user_id = ?";
+		String query = "UPDATE users SET usd_asset = usd_asset + ?, btc_asset = btc_asset + ? WHERE user_id = ?";
 		try {
 			PreparedStatement statement = conn.prepareStatement(query);
 
@@ -145,5 +142,35 @@ public class MySQLConnection implements DBConnection {
 		}
 		return transactions;
 
+	}
+
+	@Override
+	public void updateTransactions(Integer buyPrice, Integer sellPrice) {
+		try {
+			String sql = "SELECT * from transactions WHERE buy_sell = \"buy\" AND target_price > ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setInt(1, buyPrice);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				Integer amount = rs.getInt("amount");
+				String userId = rs.getString("user_id");
+				String itemId = rs.getString("item_id");
+				updateUser(userId, 0, amount);
+				deleteTransaction(userId, itemId);
+			}
+			sql = "SELECT item_id from transactions WHERE buy_sell = \"sell\" AND target_price < ?";
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, sellPrice);
+			rs = statement.executeQuery();
+			while (rs.next()) {
+				Integer amount = rs.getInt("amount");
+				String userId = rs.getString("user_id");
+				String itemId = rs.getString("item_id");
+				updateUser(userId, amount * sellPrice, 0);
+				deleteTransaction(userId, itemId);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }
