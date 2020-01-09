@@ -7,7 +7,7 @@
 # How I built it
 
 # Challenges I ran into
-  Database design.
+  Database design.(A minimum viable product (MVP))
   Concurrency.
 # Accomplishments that I'm proud of
 
