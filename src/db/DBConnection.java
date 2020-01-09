@@ -57,4 +57,20 @@ public interface DBConnection {
 	 * @param sellPrice
 	 */
 	public void updateTransactions(Integer buyPrice, Integer sellPrice);
+	
+	/**
+	 * add user.
+	 * 
+	 * @param user_id
+	 * @param password
+	 */
+	public void addUser(String user_id, String password);
+	
+	/**
+	 * get user.
+	 * 
+	 * @param user_id
+	 * @param password
+	 */
+	public String[] getUser(String user_id, String password);
 }

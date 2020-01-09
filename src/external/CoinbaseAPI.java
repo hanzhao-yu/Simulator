@@ -80,9 +80,9 @@ public class CoinbaseAPI {
  
  
 			
-			int responseCode = connection.getResponseCode();
-			System.out.println("\nSending 'GET' request to URL : " + url + query);  //test
-			System.out.println("Response Code : " + responseCode);
+//			int responseCode = connection.getResponseCode();
+//			System.out.println("\nSending 'GET' request to URL : " + url + query);  //test
+//			System.out.println("Response Code : " + responseCode);
 			
 			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			String inputLine;

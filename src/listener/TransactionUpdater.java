@@ -22,6 +22,7 @@ import external.CoinbaseAPI;
 public class TransactionUpdater implements ServletContextListener {
 	private DBConnection conn = DBConnectionFactory.getDBConnection();
 	private CoinbaseAPI api = new CoinbaseAPI();
+	private SpotPrice spot = new SpotPrice();
 	private ScheduledExecutorService scheduler;
 
 	/**
@@ -50,6 +51,8 @@ public class TransactionUpdater implements ServletContextListener {
 				try {
 					Integer buyPrice = (int) (api.buyPrice().getDouble("amount") * 1000);
 					Integer sellPrice = (int) (api.sellPrice().getDouble("amount") * 1000);
+					Integer spotPrice = (int) (api.spotPrice().getDouble("amount") * 1000);
+					spot.price(spotPrice);
 					conn.updateTransactions(buyPrice, sellPrice);
 				} catch (JSONException e) {
 					e.printStackTrace();

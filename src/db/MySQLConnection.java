@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import entity.Transaction;
+import listener.SpotPrice;
 
 public class MySQLConnection implements DBConnection {
 	private static MySQLConnection instance;
@@ -172,5 +173,44 @@ public class MySQLConnection implements DBConnection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void addUser(String user_id, String password) {
+		try {
+			String sql = "INSERT IGNORE INTO users " + "VALUES (?, ?, 10000000, 10000000)";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, user_id);
+			statement.setString(2, password);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public String[] getUser(String user_id, String password) {
+		SpotPrice spot = new SpotPrice();
+		String[] res = new String[4];
+		try {
+			String sql = "SELECT * from users WHERE user_id = ? AND password = ?";
+			PreparedStatement statement = conn.prepareStatement(sql);
+			statement.setString(1, user_id);
+			statement.setString(2, password);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				String userId = rs.getString("user_id");
+				Integer usd = rs.getInt("usd_asset");
+				Integer btc = rs.getInt("btc_asset");
+				res[0] = userId;
+				res[1] = Long.toString((long)btc * spot.price(0) / 10000000 + usd);
+				res[2] = Long.toString(usd);
+				res[3] = Long.toString(btc);
+			}
+			return res;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
