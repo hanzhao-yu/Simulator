@@ -16,7 +16,7 @@ public interface DBConnection {
 	 * @param userId
 	 * @param itemId
 	 */
-	public void deleteTransaction(String userId, String itemId);
+	public void deleteTransaction(String userId, String itemId, boolean complete);
 
 	/**
 	 * Search transactions by userId.

@@ -1,5 +1,6 @@
 package db;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -47,10 +48,29 @@ public class MySQLConnection implements DBConnection {
 	}
 
 	@Override
-	public void deleteTransaction(String userId, String itemId) {
+	public void deleteTransaction(String userId, String itemId, boolean complete) {
 		String query = "DELETE FROM transactions WHERE user_id = ? and item_id = ?";
+		PreparedStatement statement;
 		try {
-			PreparedStatement statement = conn.prepareStatement(query);
+			if (!complete) {
+				String sql = "SELECT * from transactions WHERE item_id = ? AND user_id = ?";
+				statement = conn.prepareStatement(sql);
+				statement.setString(1, itemId);
+				statement.setString(2, userId);
+				ResultSet rs = statement.executeQuery();
+				if (rs.next()) {
+					String buy_sell = rs.getString("buy_sell");
+					if (buy_sell.equals("sell")) {
+						updateUser(userId, 0, rs.getInt("amount"));
+					} else {
+						BigInteger usd = new BigInteger(((Integer) rs.getInt("amount")).toString())
+								.multiply(new BigInteger(((Integer) rs.getInt("target_price")).toString()))
+								.divide(new BigInteger("10000000"));
+						updateUser(userId, usd.intValue(), 0);
+					}
+				}
+			}
+			statement = conn.prepareStatement(query);
 			statement.setString(1, userId);
 			statement.setString(2, itemId);
 			statement.execute();
@@ -157,18 +177,23 @@ public class MySQLConnection implements DBConnection {
 				String userId = rs.getString("user_id");
 				String itemId = rs.getString("item_id");
 				updateUser(userId, 0, amount);
-				deleteTransaction(userId, itemId);
+				deleteTransaction(userId, itemId, true);
 			}
-			sql = "SELECT item_id from transactions WHERE buy_sell = \"sell\" AND target_price < ?";
+			sql = "SELECT * from transactions WHERE buy_sell = \"sell\" AND target_price < ?";
 			statement = conn.prepareStatement(sql);
 			statement.setInt(1, sellPrice);
 			rs = statement.executeQuery();
 			while (rs.next()) {
 				Integer amount = rs.getInt("amount");
+				Integer target = rs.getInt("target_price");
 				String userId = rs.getString("user_id");
 				String itemId = rs.getString("item_id");
-				updateUser(userId, amount * sellPrice, 0);
-				deleteTransaction(userId, itemId);
+
+				BigInteger usd = new BigInteger(((Integer) amount).toString())
+						.multiply(new BigInteger(((Integer) target).toString())).divide(new BigInteger("10000000"));
+				updateUser(userId, usd.intValue(), 0);
+
+				deleteTransaction(userId, itemId, true);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -203,7 +228,7 @@ public class MySQLConnection implements DBConnection {
 				Integer usd = rs.getInt("usd_asset");
 				Integer btc = rs.getInt("btc_asset");
 				res[0] = userId;
-				res[1] = Long.toString((long)btc * spot.price(0) / 10000000 + usd);
+				res[1] = Long.toString((long) btc * spot.price(0) / 10000000 + usd);
 				res[2] = Long.toString(usd);
 				res[3] = Long.toString(btc);
 			}

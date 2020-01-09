@@ -9,19 +9,23 @@ public class Transaction {
 	private Integer targetPrice;
 	private Integer amount;
 	private String buySell;
-	
+
 	public String getItemId() {
 		return itemId;
 	}
+
 	public String getUserId() {
 		return userId;
 	}
+
 	public Integer getTargetPrice() {
 		return targetPrice;
 	}
+
 	public Integer getAmount() {
 		return amount;
 	}
+
 	public String getBuySell() {
 		return buySell;
 	}
@@ -29,10 +33,22 @@ public class Transaction {
 	public JSONObject toJSONObject() {
 		JSONObject obj = new JSONObject();
 		try {
+			String amountStr = amount.toString();
+			String targetPriceStr = targetPrice.toString();
+			while (amountStr.length() < 8) {
+				amountStr = '0' + amountStr;
+			}
+			while (targetPriceStr.length() < 4) {
+				targetPriceStr = '0' + targetPriceStr;
+			}
+			targetPriceStr = targetPriceStr.substring(0, targetPriceStr.length() - 3) + '.'
+					+ targetPriceStr.substring(targetPriceStr.length() - 3, targetPriceStr.length());
+			amountStr = amountStr.substring(0, amountStr.length() - 7) + '.'
+					+ amountStr.substring(amountStr.length() - 7, amountStr.length());
 			obj.put("item_id", itemId);
 			obj.put("user_id", userId);
-			obj.put("target_price", targetPrice);
-			obj.put("amount", amount);
+			obj.put("target_price", targetPriceStr);
+			obj.put("amount", amountStr);
 			obj.put("buy_sell", buySell);
 		} catch (JSONException e) {
 			e.printStackTrace();

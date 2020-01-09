@@ -150,7 +150,7 @@ ul {
 	background: rgba(255, 255, 255, 0.8);
 }
 
-.item>div:first-of-type {
+.item>div {
 	flex: 1;
 	margin-left: 10px;
 	margin-right: 10px;
@@ -166,4 +166,24 @@ ul {
 
 .cancel-link:hover {
 	color: #F13F3F;
+}
+
+.send-btn {
+	border-left: 1px solid #FFFFFF;
+	cursor: pointer;
+	line-height: 60px;
+	text-align: center;
+	width: 60px;
+}
+
+.send-btn:hover {
+	color: #F13F3F;
+}
+
+.text {
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
+  resize: none;
+  overflow: auto; 
 }

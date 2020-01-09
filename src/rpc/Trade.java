@@ -1,6 +1,7 @@
 package rpc;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -65,9 +66,43 @@ public class Trade extends HttpServlet {
 			JSONObject input = RpcHelper.readJsonObject(request);
 			String userId = input.getString("user_id");
 			String itemId = input.getString("item_id");
-			Integer targetPrice = input.getInt("target_price");
-			Integer amount = input.getInt("amount");
+			String targetPriceStr = input.getString("target_price");
+			String amountStr = input.getString("amount");
 			String buySell = input.getString("buy_sell");
+			String password = input.getString("password");
+			
+			if (targetPriceStr == null || targetPriceStr.length() == 0 || amountStr == null || amountStr.length() == 0) {
+				return;
+			}
+
+			Integer targetPrice = (new BigDecimal(targetPriceStr).multiply(new BigDecimal(1000))).toBigInteger()
+					.intValue();
+			Integer amount = (new BigDecimal(amountStr).multiply(new BigDecimal(10000000))).toBigInteger().intValue();
+			if (amount == 0 || targetPrice == 0) {
+				return;
+			}
+
+			String[] user = conn.getUser(userId, password);
+			if (user == null) {
+				return;
+			}
+
+			if (buySell.equals("sell")) {
+				if (Integer.parseInt(user[3]) < amount) {
+					return;
+				} else {
+					conn.updateUser(userId, 0, -amount);
+				}
+			}
+			if (buySell.equals("buy")) {
+				Integer usd = new BigDecimal(targetPriceStr).multiply(new BigDecimal(amountStr))
+						.multiply(new BigDecimal(1000)).toBigInteger().intValue();
+				if (Integer.parseInt(user[2]) < usd) {
+					return;
+				} else {
+					conn.updateUser(userId, -usd, 0);
+				}
+			}
 
 			Transaction transaction = new Transaction.Builder().setUserId(userId).setItemId(itemId).setAmount(amount)
 					.setBuySell(buySell).setTargetPrice(targetPrice).build();
@@ -79,20 +114,20 @@ public class Trade extends HttpServlet {
 		}
 	}
 
-	  /**
-	   * @see HttpServlet#doDelete(HttpServletRequest request, HttpServletResponse response)
-	   */
-	  protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-	      throws ServletException, IOException {
-	    try {
-	      JSONObject input = RpcHelper.readJsonObject(request);
-	      String userId = input.getString("user_id");
-	      String itemId = input.getString("item_id");
-
-	      conn.deleteTransaction(userId, itemId);
-	      RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
-	    } catch (JSONException e) {
-	      e.printStackTrace();
-	    }
-	  }
+	/**
+	 * @see HttpServlet#doDelete(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		try {
+			JSONObject input = RpcHelper.readJsonObject(request);
+			String userId = input.getString("user_id");
+			String itemId = input.getString("item_id");
+			conn.deleteTransaction(userId, itemId, false);
+			RpcHelper.writeJsonObject(response, new JSONObject().put("result", "SUCCESS"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
 }
