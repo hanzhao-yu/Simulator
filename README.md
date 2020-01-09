@@ -8,17 +8,26 @@
 
 # Challenges I ran into
   Database design.
+  Concurrency.
 # Accomplishments that I'm proud of
 
 # What I learned
-
-# What's next for DeFake
-
+  Javascript.
+  ServletListener.
+# What's next for this
+  Migrate to Cloud.
+  Load test.
+  Redesign the database.
+  More feature.
 # Built With
   Java, 
   Apache Tomcat server, 
   Json, 
   Mysql, 
   Coinbase API, 
-  MAMP, 
+  MAMP,
+  HTML,
+  CSS,
+  JavaScript,
+  Ajax
 # Try it out
