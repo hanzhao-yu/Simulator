@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import entity.Transaction;
-import listener.SpotPrice;
+import listener.Price;
 
 public class MySQLConnection implements DBConnection {
 	private static MySQLConnection instance;
@@ -215,7 +215,7 @@ public class MySQLConnection implements DBConnection {
 
 	@Override
 	public String[] getUser(String user_id, String password) {
-		SpotPrice spot = new SpotPrice();
+		Price spot = new Price();
 		String[] res = new String[4];
 		try {
 			String sql = "SELECT * from users WHERE user_id = ? AND password = ?";
@@ -228,7 +228,7 @@ public class MySQLConnection implements DBConnection {
 				Integer usd = rs.getInt("usd_asset");
 				Integer btc = rs.getInt("btc_asset");
 				res[0] = userId;
-				res[1] = Long.toString((long) btc * spot.price(0) / 10000000 + usd);
+				res[1] = Long.toString((long) btc * spot.spotPrice(0) / 10000000 + usd);
 				res[2] = Long.toString(usd);
 				res[3] = Long.toString(btc);
 			}

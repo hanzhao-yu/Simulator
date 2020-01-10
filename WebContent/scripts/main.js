@@ -196,10 +196,21 @@
 					className : 'user-btc'
 				});
 				child_4.innerHTML = 'BTC Asset: ' + items.btc;
+
 				div.appendChild(child_1);
 				div.appendChild(child_2);
 				div.appendChild(child_3);
 				div.appendChild(child_4);
+				
+				ajax('GET', './price', req, function(res){
+					var price = JSON.parse(res);
+					var child_5 = $('p', {
+						className : 'spot-price'
+					});
+					child_5.innerHTML = 'Spot-Price: ' + price.spot;
+					div.appendChild(child_5);
+				})
+				
 				li.appendChild(div);
 				ul.appendChild(li);
 				section.appendChild(ul);
@@ -304,6 +315,37 @@
 		li.appendChild(div2);
 		li.appendChild(div3);
 		li.appendChild(div4);
+		
+		var li_price = $('li', {
+			className : 'info'
+		});
+		
+		var div = $('div', {});
+		
+		ajax('GET', './price', JSON.stringify({}), function(res){
+			var price = JSON.parse(res);
+			var child_1 = $('p', {
+				className : 'buy-price'
+			});
+			child_1.innerHTML = 'Buy-Price: ' + price.buy;
+			div.appendChild(child_1);
+			
+			var child_2 = $('p', {
+				className : 'spot-price'
+			});
+			child_2.innerHTML = 'Spot-Price: ' + price.spot;
+			div.appendChild(child_2);
+			
+			var child_3 = $('p', {
+				className : 'sell-price'
+			});
+			child_3.innerHTML = 'Sell-Price: ' + price.sell;
+			div.appendChild(child_3);
+		})
+		
+		li_price.appendChild(div);
+		
+		ul.appendChild(li_price);
 		ul.appendChild(li);
 		section.appendChild(ul);
 	}
