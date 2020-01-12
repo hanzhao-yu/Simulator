@@ -70,8 +70,9 @@ public class Trade extends HttpServlet {
 			String amountStr = input.getString("amount");
 			String buySell = input.getString("buy_sell");
 			String password = input.getString("password");
-			
-			if (targetPriceStr == null || targetPriceStr.length() == 0 || amountStr == null || amountStr.length() == 0) {
+
+			if (targetPriceStr == null || targetPriceStr.length() == 0 || amountStr == null || amountStr.length() == 0
+					|| amountStr.length() > 10 || targetPriceStr.length() > 10) {
 				return;
 			}
 

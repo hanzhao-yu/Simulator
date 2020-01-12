@@ -267,7 +267,6 @@
 		p1.innerHTML = 'Target Price(USD)';
 		var text1 = $('textarea', {
 			className : 'text',
-			maxlength : '20',
 			id : 'text-target'
 		});
 		div1.appendChild(p1);
@@ -278,7 +277,6 @@
 		p2.innerHTML = 'Amount(BTC)';
 		var text2 = $('textarea', {
 			className : 'text',
-			maxlength : '20',
 			id : 'text-amount'
 		});
 		div2.appendChild(p2);
